@@ -72,3 +72,7 @@ E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.csproj.CoreCompileInputs.cache
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.csproj.CopyComplete
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.dll
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.pdb
+E:\Facultate\Licenta\Licenta\bin\EntityFramework.dll
+E:\Facultate\Licenta\Licenta\bin\EntityFramework.SqlServer.dll
+E:\Facultate\Licenta\Licenta\bin\EntityFramework.xml
+E:\Facultate\Licenta\Licenta\bin\EntityFramework.SqlServer.xml
