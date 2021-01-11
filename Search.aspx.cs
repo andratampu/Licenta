@@ -9,25 +9,26 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
+
 namespace Licenta
 {
-    public partial class Search : System.Web.UI.Page
+    public partial class WebForm1 : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<Reciepe> reciepes = new List<Reciepe>(GetReceipes());
-            Repeater1.DataSource = reciepes;
-            Repeater1.DataBind();
+            List<Recipe> reciepes = new List<Recipe>(GetReceipes());
+            Repeater2.DataSource = reciepes;
+            Repeater2.DataBind();
         }
 
-        string Baseurl = "https://api.spoonacular.com/";
-        public List<Reciepe> GetReceipes()
+        string baseUrl = "https://api.spoonacular.com/";
+        public List<Recipe> GetReceipes()
         {
             Root receipes = new Root();
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(Baseurl);
+                client.BaseAddress = new Uri(baseUrl);
 
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -41,12 +42,10 @@ namespace Licenta
 
                 }
                 client.Dispose();
-                List<Reciepe> result = new List<Reciepe>(receipes.Results);
+                List<Recipe> result = new List<Recipe>(receipes.Results);
 
                 return result;
             }
         }
-
-
     }
 }

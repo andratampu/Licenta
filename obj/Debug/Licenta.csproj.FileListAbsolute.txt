@@ -76,3 +76,16 @@ E:\Facultate\Licenta\Licenta\bin\EntityFramework.dll
 E:\Facultate\Licenta\Licenta\bin\EntityFramework.SqlServer.dll
 E:\Facultate\Licenta\Licenta\bin\EntityFramework.xml
 E:\Facultate\Licenta\Licenta\bin\EntityFramework.SqlServer.xml
+E:\Facultate\Licenta\Licenta\bin\roslyn\System.Memory.dll
+E:\Facultate\Licenta\Licenta\bin\Microsoft.Extensions.Primitives.dll
+E:\Facultate\Licenta\Licenta\bin\Microsoft.Net.Http.Headers.dll
+E:\Facultate\Licenta\Licenta\bin\System.Buffers.dll
+E:\Facultate\Licenta\Licenta\bin\System.Memory.dll
+E:\Facultate\Licenta\Licenta\bin\System.Numerics.Vectors.dll
+E:\Facultate\Licenta\Licenta\bin\System.Runtime.CompilerServices.Unsafe.dll
+E:\Facultate\Licenta\Licenta\bin\Microsoft.Extensions.Primitives.xml
+E:\Facultate\Licenta\Licenta\bin\Microsoft.Net.Http.Headers.xml
+E:\Facultate\Licenta\Licenta\bin\System.Buffers.xml
+E:\Facultate\Licenta\Licenta\bin\System.Memory.xml
+E:\Facultate\Licenta\Licenta\bin\System.Numerics.Vectors.xml
+E:\Facultate\Licenta\Licenta\bin\System.Runtime.CompilerServices.Unsafe.xml
