@@ -7,7 +7,7 @@
         <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
         <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>--%>
         <h3>Înregistrează-te</h3>
-        <asp:createuserwizard id="Createuserwizard1" runat="server" Height="304px" Width="406px" ContinueDestinationPageUrl="~/About.aspx">
+        <asp:createuserwizard id="Createuserwizard1" runat="server" Height="304px" Width="406px" ContinueDestinationPageUrl="~/Home.aspx">
         <wizardsteps>
           <asp:createuserwizardstep runat="server" title="Sign Up for Your New Account">
               <ContentTemplate>
