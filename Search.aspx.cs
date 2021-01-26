@@ -23,15 +23,14 @@ namespace Licenta
 {
     public partial class Search : System.Web.UI.Page
     {
+        static List<Recipe> global_recipes;
         protected void Page_Load(object sender, EventArgs e)
         {
-            List<Recipe> reciepes = new List<Recipe>(GetReceipes());
-            DataList1.DataSource = reciepes;
-            DataList1.DataBind();
+
         }
 
         static string baseUrl = "https://api.spoonacular.com/";
-        public List<Recipe> GetReceipes()
+        public List<Recipe> GetReceipes( string search )
         {
             Root receipes = new Root();
 
@@ -42,7 +41,7 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = client.GetAsync("recipes/complexSearch?apiKey=4bf4ec1927934264b57d31947fcbb48e&query=pasta&number=17").Result;
+                HttpResponseMessage response = client.GetAsync($"recipes/complexSearch?apiKey=4bf4ec1927934264b57d31947fcbb48e&query={search}&number=3").Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -52,6 +51,12 @@ namespace Licenta
                 }
                 client.Dispose();
                 List<Recipe> result = new List<Recipe>(receipes.Results);
+
+                foreach(Recipe recipe in result)
+                {
+                    recipe.ingredients = GetReceipeIngredients(recipe.ID);
+                    recipe.instructions = GetReceipeInstructions(recipe.ID);
+                }
 
                 return result;
             }
@@ -139,25 +144,154 @@ namespace Licenta
             }
         }
 
-        protected void Button1_Click(object sender, ImageClickEventArgs e)
+        public IngredientsAndInstructions GetReceipeById()
         {
-            Session["RecipeId"] = Label1.Text;
-            Response.Redirect("DetailsPopup.aspx");
+            int id = Convert.ToInt32(Request.QueryString["recipeID"]);
+
+            InstructionsRoot instructions = new InstructionsRoot();
+            IngredientsRoot ingredients = new IngredientsRoot();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseUrl);
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage responseInstructions = client.GetAsync($"recipes/{id}/analyzedInstructions?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+                HttpResponseMessage responseIngredients = client.GetAsync($"recipes/{id}//ingredientWidget.json?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+
+                if (responseInstructions.IsSuccessStatusCode)
+                {
+                    var response = responseInstructions.Content.ReadAsStringAsync().Result;
+                    instructions = JsonConvert.DeserializeObject<InstructionsRoot>(response);
+
+                }
+
+                if (responseIngredients.IsSuccessStatusCode)
+                {
+                    var response = responseIngredients.Content.ReadAsStringAsync().Result;
+                    ingredients = JsonConvert.DeserializeObject<IngredientsRoot>(response);
+
+                }
+
+                client.Dispose();
+
+                IngredientsAndInstructions result = new IngredientsAndInstructions();
+
+                foreach (Step step in instructions.steps)
+                {
+                    result.instructions.Add(step.step);
+                }
+
+                foreach (Ingredient ingredient in ingredients.ingredients)
+                {
+                    result.ingredients.Add(ingredient.amount.metric.value + ingredient.amount.metric.unit + " of " + ingredient.name);
+                }
+
+                return result;
+            }
+
         }
 
-        //protected void btnOk_Click(object sender, ImageClickEventArgs e)
-        //{
-        //    //Do Work
+        public string GetReceipeIngredients(int id)
+        {
+            
+            IngredientsRoot ingredients = new IngredientsRoot();
 
-        //    mpePopUp.Hide();
-        //}
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseUrl);
 
-        //protected void btnCancel_Click(object sender, ImageClickEventArgs e)
-        //{
-        //    //Do Work
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                
+                HttpResponseMessage responseIngredients = client.GetAsync($"recipes/{id}//ingredientWidget.json?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
 
-        //    mpePopUp.Hide();
-        //}
+                if (responseIngredients.IsSuccessStatusCode)
+                {
+                    var response = responseIngredients.Content.ReadAsStringAsync().Result;
+                    ingredients = JsonConvert.DeserializeObject<IngredientsRoot>(response);
 
+                }
+
+                client.Dispose();
+
+                string result = "";
+
+                foreach (Ingredient ingredient in ingredients.ingredients)
+                {
+                    result += ingredient.amount.metric.value + " " + ingredient.amount.metric.unit + " of "  + ingredient.name + "<br />";
+                }
+                
+                return result;
+            }
+
+        }
+
+        public string GetReceipeInstructions(int id)
+        {
+            List<InstructionsRoot> instructions = new List<InstructionsRoot>();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseUrl);
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage responseInstructions = client.GetAsync($"recipes/{id}/analyzedInstructions?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+
+                if (responseInstructions.IsSuccessStatusCode)
+                {
+                    var response = responseInstructions.Content.ReadAsStringAsync().Result;
+                    instructions = JsonConvert.DeserializeObject<List<InstructionsRoot>>(response);
+                }
+
+                client.Dispose();
+
+                string result = "";
+
+                foreach (Step step in instructions[0].steps)
+                {
+                    result += step.step + "<br />";
+                }
+
+                return result;
+            }
+
+        }
+
+        public static Recipe GetRecipeObject(string id)
+        {
+            var ret = (from l in global_recipes
+                            where l.ID.ToString() == id
+                            select l).Distinct().ToList();
+            Recipe res = (Recipe)ret.FirstOrDefault();
+
+            return res;
+        }
+
+        protected void DataList1_ItemCommand(object source, DataListCommandEventArgs e)
+        {
+            if (e.CommandName == "Item")
+            {
+                Label label1 = (Label)DataList1.Items[e.Item.ItemIndex].FindControl("Label3");
+                string labelValue = label1.Text;
+
+                Page.ClientScript.RegisterStartupScript( this.GetType(), "OpenWindow", "window.open('RecipeDetails.aspx','_newtab');", true);
+
+                Session["Recipe"] = GetRecipeObject(labelValue);
+            }
+        }
+
+        protected void searchBtn_Click(object sender, EventArgs e)
+        {
+            string searchString = searchTxt.Text;
+            List<Recipe> reciepes = new List<Recipe>(GetReceipes(searchString));
+            global_recipes = reciepes;
+            DataList1.DataSource = reciepes;
+            DataList1.DataBind();
+        }
     }
 }

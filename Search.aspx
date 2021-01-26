@@ -1,8 +1,18 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Logged.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="Licenta.Search" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Logged.Master" AutoEventWireup="true" CodeFile="Search.aspx.cs" Inherits="Licenta.Search" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="/resources/demos/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+   
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <style type="text/css">
         .container{
             width: 100%;
@@ -44,38 +54,29 @@
     </style>
     <div class="newbody">
         <h3>Căutare</h3>
+
         <div id="form1" runat="server"> 
-            <asp:TextBox ID="searchTxt" runat="server" Width="70%" />   
-            <asp:Button ID="searchBtn" runat="server" Width ="20%" Text="Search" />
-        </div>  
-        <br />
+            <asp:TextBox ID="searchTxt" runat="server" Width="80%"/>   
+            <asp:Button ID="searchBtn" runat="server" Width ="10%" Text="Search" OnClick="searchBtn_Click" />
+        </div> 
+        <br/>
+
         <div class="items">
-            
-            <asp:DataList ID="DataList1" runat="server" RepeatDirection="Horizontal" RepeatColumns="3" CellPadding="0" CellSpacing="0" ItemStyle-Width="30%" SeparatorStyle-Width="2%" RepeatLayout="Flow" Width="100%" ItemStyle-Height="30%">
+            <asp:DataList ID="DataList1" runat="server" RepeatDirection="Horizontal" OnItemCommand="DataList1_ItemCommand" RepeatColumns="3" CellPadding="0" CellSpacing="0" ItemStyle-Width="30%" SeparatorStyle-Width="2%" RepeatLayout="Flow" Width="100%" ItemStyle-Height="30%">
                  <ItemTemplate>
                     <div class="card">
                          <img src="<%# Eval("Image") %>" alt="Avatar" style="width:100%">
                          <div class="container">
-                            <p><b><%# Eval("Title") %></b></p>
-                             <p id="RecipeId"><%# Eval("ID")%></p>
-                             <%--<asp:Label ID="Label1" runat="server" Visible="false"><%# Eval("ID")%></asp:Label>--%>
-                             <asp:TextBox ID="TextBox1" runat="server"><%#Eval("ID")%></asp:TextBox>  <%--To be solved--%>
-                            <asp:Button ID="Button1" runat="server" Text="View Details" OnClientClick="Button1_Click" />
-                             <div id="form2" runat="server">  
-                                <cc1:ModalPopupExtender ID="mp1" runat="server" PopupControlID="Panel1" TargetControlID="Button1"  
-                                    CancelControlID="Button2" BackgroundCssClass="Background">  
-                                </cc1:ModalPopupExtender>  
-                                <asp:Panel ID="Panel1" runat="server" CssClass="Popup" align="center" style = "display:none">  
-                                    <iframe style=" width: 350px; height: 300px;" id="irm1" src="DetailsPopup.aspx" runat="server"></iframe>  
-                                   <br/>  
-                                    <asp:Button ID="Button2" runat="server" Text="Close" />  
-                                </asp:Panel>  
-                            </div>
+                             <asp:Label ID="Label1" runat="server" Text='<%# Eval("Title") %>'></asp:Label>
+                             <asp:Label ID="Label3" runat="server" Text='<%# Eval("ID") %>'  Visible="false"></asp:Label>
+                             <br />
+                            <asp:Button ID="Button1" runat="server" Text="View Details" CommandName="Item"/>
+                             <br />
                           </div>
                     </div>
-                    <br />
                 </ItemTemplate>
            </asp:DataList>
-        </div>
-     </div>
+         </div>
+    </div>
+
 </asp:Content>

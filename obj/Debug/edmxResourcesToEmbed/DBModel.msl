@@ -1,16 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="LicentaModelStoreContainer" CdmEntityContainer="DBEntities">
-    <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="LicentaModel.User">
-        <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="Username" ColumnName="Username" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
-          <ScalarProperty Name="Email" ColumnName="Email" />
-          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-          <ScalarProperty Name="LastName" ColumnName="LastName" />
-          <ScalarProperty Name="FirstLoginDone" ColumnName="FirstLoginDone" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
+  <EntityContainerMapping StorageEntityContainer="DBModelStoreContainer" CdmEntityContainer="DBModelContainer">
+    <EntitySetMapping Name="Favorites">
+      <EntityTypeMapping TypeName="IsTypeOf(DBModel.Favorites)">
+        <MappingFragment StoreEntitySet="Favorites">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="RecipeID" ColumnName="RecipeID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

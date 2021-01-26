@@ -98,3 +98,4 @@ E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.csproj.CoreCompileInputs.cache
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.csproj.CopyComplete
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.dll
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.pdb
+E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.csprojAssemblyReference.cache
