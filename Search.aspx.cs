@@ -17,6 +17,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using System.Web.Services;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 
 namespace Licenta
@@ -26,12 +27,14 @@ namespace Licenta
         static List<Recipe> global_recipes;
         protected void Page_Load(object sender, EventArgs e)
         {
+            //Label2.Text = "Search what you would like to eat.";
 
         }
 
         static string baseUrl = "https://api.spoonacular.com/";
-        public List<Recipe> GetReceipes( string search )
+        public List<Recipe> GetReceipes( string search, string ingredientsTxt)
         {
+            string ingredients = Regex.Replace(ingredientsTxt, @"\s+", ",");
             Root receipes = new Root();
 
             using (var client = new HttpClient())
@@ -41,7 +44,14 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = client.GetAsync($"recipes/complexSearch?apiKey=4bf4ec1927934264b57d31947fcbb48e&query={search}&number=3").Result;
+                string req = $"recipes/complexSearch?apiKey=4bf4ec1927934264b57d31947fcbb48e&query={search}&number=1";
+
+                if(!string.IsNullOrEmpty(ingredients) && !string.IsNullOrWhiteSpace(ingredients))
+                {
+                    req += $"&includeIngredients={ingredients}";
+                }
+
+                HttpResponseMessage response = client.GetAsync(req).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -288,7 +298,8 @@ namespace Licenta
         protected void searchBtn_Click(object sender, EventArgs e)
         {
             string searchString = searchTxt.Text;
-            List<Recipe> reciepes = new List<Recipe>(GetReceipes(searchString));
+            string searchStringI = TextBox1.Text;
+            List <Recipe> reciepes = new List<Recipe>(GetReceipes(searchString, searchStringI));
             global_recipes = reciepes;
             DataList1.DataSource = reciepes;
             DataList1.DataBind();

@@ -1,21 +1,54 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Logged.Master" AutoEventWireup="true" CodeBehind="RecipeDetails.aspx.cs" Inherits="Licenta.RecipeDetails" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <style type="text/css">
-        .container{
-            width: 100%;
+        .vertical
+        {
+            position:absolute;
+            left:0;
+            right: 5%;
+            background-color:white;
+            display:flex;
+            flex-direction:row;
         } 
+        .vertical2
+        {
+            display:flex;
+        }
+        .push-right
+        {
+            margin-left: auto;
+        }
+        .crop
+        {
+             max-width: 100%; 
+             overflow: hidden;
+             text-indent:-20%;
+        }
+        .texts
+        {
+            margin-left:5%;
+        }
       </style>
-    <asp:Image ID="Image1" runat="server" Height="200px" Width="100%" />
     <br />
-    <asp:Button ID="Button1" runat="server" Text="Favorite" BackColor="Transparent" OnClick="Button1_Click" />
-    <br />
-    <asp:Label ID="Label1" runat="server" Text="Ingredients" Font-Size="Large"></asp:Label>
-    <br />
-    <asp:Label ID="Label2" runat="server" Text="Label" Font-Size="Medium"></asp:Label>
-    <br />
-    <asp:Label ID="Label3" runat="server" Text="Instructions" Font-Size="Large"></asp:Label>
-    <br />
-    <asp:Label ID="Label4" runat="server" Text="Label" Font-Size="Medium"></asp:Label>
+    <div class="vertical">
+        <div class="crop">
+            <asp:Image ID="Image1" runat="server" Height="100%" Width="100%" />
+        </div>
+        <div class="texts">
+            <div class="vertical2">
+                <asp:Label ID="Label1" runat="server" Text="Ingredients" Font-Size="Large"></asp:Label>
+                <div class="vertical2 push-right">
+                    <asp:Button ID="Button1" runat="server" Text="Favorite" BackColor="Transparent" OnClick="Button1_Click" />
+                </div>
+            </div>
+        
+            <asp:Label ID="Label2" runat="server" Text="Label" Font-Size="Medium"></asp:Label>
+            <br />
+            <asp:Label ID="Label3" runat="server" Text="Instructions" Font-Size="Large"></asp:Label>
+            <br />
+            <asp:Label ID="Label4" runat="server" Text="Label" Font-Size="Medium"></asp:Label>
+        </div>
+   </div>
 
 
 </asp:Content>

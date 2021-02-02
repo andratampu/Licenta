@@ -1,3 +1,4 @@
+E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.csproj.CoreCompileInputs.cache
 E:\Facultate\Licenta\Licenta\bin\Licenta.dll.config
 E:\Facultate\Licenta\Licenta\bin\Licenta.dll
 E:\Facultate\Licenta\Licenta\bin\Licenta.pdb
@@ -94,7 +95,6 @@ E:\Facultate\Licenta\Licenta\bin\Newtonsoft.Json.xml
 E:\Facultate\Licenta\Licenta\bin\Antlr3.Runtime.pdb
 E:\Facultate\Licenta\Licenta\bin\Microsoft.AspNet.FriendlyUrls.xml
 E:\Facultate\Licenta\Licenta\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.csproj.CoreCompileInputs.cache
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.csproj.CopyComplete
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.dll
 E:\Facultate\Licenta\Licenta\obj\Debug\Licenta.pdb

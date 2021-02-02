@@ -12,11 +12,12 @@ namespace Licenta
     public partial class RecipeDetails : System.Web.UI.Page
     {
         LicentaEntities model = new LicentaEntities();
-        Recipe recipe = new Recipe();
-        Favorite favorite = new Favorite();
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            Recipe recipe = new Recipe();
+            Favorite favorite = new Favorite();
+
             recipe = (Recipe)Session["Recipe"];
 
             favorite = model.Favorites.Where(x => x.RecipeId == recipe.ID && x.UserId == Page.User.Identity.Name).FirstOrDefault();
@@ -37,9 +38,14 @@ namespace Licenta
 
         protected void Button1_Click(object sender, EventArgs e)
         {
+            Recipe recipe = (Recipe)Session["Recipe"];
+            Favorite favorite = new Favorite();
+
             if (Button1.ForeColor == System.Drawing.Color.Red)
             {
                 Button1.ForeColor = System.Drawing.Color.Black;
+
+                favorite = model.Favorites.Where(x => x.RecipeId == recipe.ID && x.UserId == Page.User.Identity.Name).FirstOrDefault();
 
                 model.Entry(favorite).State = EntityState.Deleted;
                 model.SaveChanges();
