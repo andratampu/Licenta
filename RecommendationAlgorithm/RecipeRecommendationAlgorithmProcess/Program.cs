@@ -19,8 +19,6 @@ namespace RecipeRecommendationAlgorithmProcess
             table.Columns.Add("RecipeId", typeof(float));
             table.Columns.Add("Rating", typeof(float));
 
-            Console.WriteLine(Convert.ToDouble("andra"));
-
             using (LicentaEntities context = new LicentaEntities())
             {
                 var query = from f in context.Favorites
