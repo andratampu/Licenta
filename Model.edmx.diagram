@@ -6,6 +6,8 @@
     <edmx:Diagrams>
       <Diagram DiagramId="f1b173725ab54c78aff13b1e4d819249" Name="Diagram1">
         <EntityTypeShape EntityType="LicentaModel.Favorite" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LicentaModel.Recommendation" Width="1.5" PointX="3.75" PointY="0.75" />
+        <EntityTypeShape EntityType="LicentaModel.User" Width="1.5" PointX="0.75" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

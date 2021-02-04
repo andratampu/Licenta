@@ -38,7 +38,16 @@
             <div class="vertical2">
                 <asp:Label ID="Label1" runat="server" Text="Ingredients" Font-Size="Large"></asp:Label>
                 <div class="vertical2 push-right">
-                    <asp:Button ID="Button1" runat="server" Text="Favorite" BackColor="Transparent" OnClick="Button1_Click" />
+                    <asp:Label ID="Label5" runat="server" Text="Rating:"></asp:Label>
+
+                    <asp:DropDownList ID="DropDownList1" runat="server" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged" AutoPostBack="True">
+                        <asp:ListItem Selected="True">1</asp:ListItem>
+                        <asp:ListItem>2</asp:ListItem>
+                        <asp:ListItem>3</asp:ListItem>
+                        <asp:ListItem>4</asp:ListItem>
+                        <asp:ListItem>5</asp:ListItem>
+                    </asp:DropDownList>
+
                 </div>
             </div>
         

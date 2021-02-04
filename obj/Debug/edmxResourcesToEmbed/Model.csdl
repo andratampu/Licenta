@@ -5,10 +5,28 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="UserId" Type="String" Nullable="false" />
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="RecipeId" Type="Int32" Nullable="false" />
+    <Property Name="Rating" Type="Int32" />
   </EntityType>
   <EntityContainer Name="LicentaEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="Favorites" EntityType="Self.Favorite" />
+    <EntitySet Name="Recommendations" EntityType="LicentaModel.Recommendation" />
+    <EntitySet Name="Users" EntityType="LicentaModel.User" />
   </EntityContainer>
+  <EntityType Name="Recommendation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Recommendations" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
 </Schema>

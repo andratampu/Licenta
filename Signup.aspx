@@ -85,7 +85,7 @@
                   <table border="0" cellspacing="5" style="width:100%;height:100%;">
                       <tr align="right">
                           <td align="right" colspan="0">
-                              <asp:Button ID="StepNextButton" runat="server" CommandName="MoveNext" Text="Create User" ValidationGroup="Createuserwizard1" OnClick="StepNextButton_Click"/>
+                              <asp:Button ID="StepNextButton" runat="server" CommandName="MoveNext" Text="Create User" ValidationGroup="Createuserwizard1"/>
                           </td>
                       </tr>
                   </table>
@@ -111,7 +111,7 @@
         </wizardsteps>
             <FinishNavigationTemplate>
                 <asp:Button ID="FinishPreviousButton" runat="server" CausesValidation="False" CommandName="MovePrevious" Text="Previous" />
-                <asp:Button ID="FinishButton" runat="server" CommandName="MoveComplete" Text="Finish" />
+                <asp:Button ID="FinishButton" runat="server" CommandName="MoveComplete" Text="Finish"/>
             </FinishNavigationTemplate>
       </asp:createuserwizard>
     </div>

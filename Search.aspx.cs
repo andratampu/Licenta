@@ -72,41 +72,6 @@ namespace Licenta
             }
         }
 
-        //[WebMethod]
-        //public static List<string> GetAutocomplete(string searchTxt)
-        //{
-        //    List<Autocomplete> autocomplete = new List<Autocomplete>();
-
-        //    using (var client = new HttpClient())
-        //    {
-        //        client.BaseAddress = new Uri(baseUrl);
-
-        //        client.DefaultRequestHeaders.Clear();
-        //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        //        HttpResponseMessage response = client.GetAsync($"food/ingredients/autocomplete?apiKey=4bf4ec1927934264b57d31947fcbb48e&query={searchTxt}&number=6").Result;
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var autocompletes = response.Content.ReadAsStringAsync().Result;
-        //            autocomplete = JsonConvert.DeserializeObject<List<Autocomplete>>(autocompletes);
-
-        //        }
-        //        client.Dispose();
-
-        //        List<string> result = new List<string>();
-
-        //        foreach (Autocomplete auto in autocomplete)
-        //        {
-        //            result.Add(auto.Name);
-        //        }
-
-        //        return result;
-
-
-        //    }
-        //}
-
         public IngredientsAndInstructions GetReceipeById(int id)
         {
             InstructionsRoot instructions = new InstructionsRoot();
