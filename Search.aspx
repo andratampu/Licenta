@@ -62,6 +62,8 @@
             <br/>
             <asp:Button ID="searchBtn" runat="server" Width ="90%" Text="Search" OnClick="searchBtn_Click" />
             <br/>
+            <asp:Button ID="Button2" runat="server" Width ="90%" Text="Recommend me something" OnClick="Button2_Click" />
+            <br />
          </div>
         <div class="results">
             <div class="items">

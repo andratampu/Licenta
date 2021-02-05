@@ -122,7 +122,7 @@ namespace RecipeRecommendationAlgorithmProcess
                         
                         var movieRatingPrediction = predictionEngine.Predict(testInput);
 
-                        if (Math.Round(movieRatingPrediction.Score, 1) > 3.5)
+                        if (Math.Round(movieRatingPrediction.Score, 1) > 4.7)
                         {
                             recommendedRecipes += testInput.RecipeId + ",";
                         }

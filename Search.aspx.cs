@@ -154,15 +154,17 @@ namespace Licenta
 
                 IngredientsAndInstructions result = new IngredientsAndInstructions();
 
-                foreach (Step step in instructions.steps)
-                {
-                    result.instructions.Add(step.step);
-                }
+                if(instructions!=null && instructions.steps!=null)
+                    foreach (Step step in instructions.steps)
+                    {
+                        result.instructions.Add(step.step);
+                    }
 
-                foreach (Ingredient ingredient in ingredients.ingredients)
-                {
-                    result.ingredients.Add(ingredient.amount.metric.value + ingredient.amount.metric.unit + " of " + ingredient.name);
-                }
+                if (ingredients != null && ingredients.ingredients != null)
+                    foreach (Ingredient ingredient in ingredients.ingredients)
+                    {
+                        result.ingredients.Add(ingredient.amount.metric.value + ingredient.amount.metric.unit + " of " + ingredient.name);
+                    }
 
                 return result;
             }
@@ -194,10 +196,11 @@ namespace Licenta
 
                 string result = "";
 
-                foreach (Ingredient ingredient in ingredients.ingredients)
-                {
-                    result += ingredient.amount.metric.value + " " + ingredient.amount.metric.unit + " of "  + ingredient.name + "<br />";
-                }
+                if(ingredients != null && ingredients.ingredients !=null)
+                    foreach (Ingredient ingredient in ingredients.ingredients)
+                    {
+                        result += ingredient.amount.metric.value + " " + ingredient.amount.metric.unit + " of "  + ingredient.name + "<br />";
+                    }
                 
                 return result;
             }
@@ -226,16 +229,43 @@ namespace Licenta
                 client.Dispose();
 
                 string result = "";
-
-                foreach (Step step in instructions[0].steps)
-                {
-                    result += step.step + "<br />";
-                }
+                if(instructions !=null && instructions.Count>0)
+                    if(instructions[0].steps!=null)
+                        foreach (Step step in instructions[0].steps)
+                        {
+                            result += step.step + "<br />";
+                        }
 
                 return result;
             }
 
         }
+
+        public Recipe GetReceipeInfo(int id)
+        {
+            Recipe recipe = new Recipe();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseUrl);
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage responseRecipe = client.GetAsync($"recipes/{id}/information?includeNutrition=false&apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+                if (responseRecipe.IsSuccessStatusCode)
+                {
+                    var response = responseRecipe.Content.ReadAsStringAsync().Result;
+                    if(response!=null)
+                        recipe = JsonConvert.DeserializeObject<Recipe>(response);
+                }
+
+                client.Dispose();
+
+                return recipe;
+            }
+        }
+
 
         public static Recipe GetRecipeObject(string id)
         {
@@ -268,6 +298,37 @@ namespace Licenta
             global_recipes = reciepes;
             DataList1.DataSource = reciepes;
             DataList1.DataBind();
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            LicentaEntities model = new LicentaEntities();
+
+            Recommendation recommendation = model.Recommendations.FirstOrDefault(x => x.UserId == HttpContext.Current.Request.LogonUserIdentity.Name);
+
+            if(recommendation == null)
+            {
+                DataList1.DataSource = new List<Recipe>();
+                DataList1.DataBind();
+            }
+            else
+            {
+                List<Recipe> recipes = new List<Recipe>();
+
+                foreach(string id in recommendation.Recommendations.Split(','))
+                {
+                    Recipe recipe = GetReceipeInfo(Int32.Parse(id));
+                    recipe.ingredients = GetReceipeIngredients(recipe.ID);
+                    recipe.instructions = GetReceipeInstructions(recipe.ID);
+
+                    recipes.Add(recipe);
+                }
+
+                global_recipes = recipes;
+                DataList1.DataSource = recipes;
+                DataList1.DataBind();
+            }
+
         }
     }
 }

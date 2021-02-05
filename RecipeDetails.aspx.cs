@@ -12,9 +12,11 @@ namespace Licenta
     public partial class RecipeDetails : System.Web.UI.Page
     {
         LicentaEntities model = new LicentaEntities();
+        string selectedValue = string.Empty;
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            selectedValue = DropDownList1.SelectedValue;
             Recipe recipe = new Recipe();
             Favorite favorite = new Favorite();
 
@@ -28,7 +30,7 @@ namespace Licenta
 
             if(favorite == null)
             {
-                DropDownList1.SelectedValue = "1";
+                DropDownList1.SelectedValue = selectedValue;
             }
             else
             {
@@ -48,15 +50,16 @@ namespace Licenta
                 favorite = new Favorite();
                 favorite.RecipeId = recipe.ID;
                 favorite.UserId = HttpContext.Current.Request.LogonUserIdentity.Name;
-                favorite.Rating = Int32.Parse(DropDownList1.SelectedValue);
+                favorite.Rating = Int32.Parse(selectedValue);
 
                 model.Favorites.Add(favorite);
                 model.SaveChanges();
             }
             else
             {
-                model.Favorites.Remove(favorite);
-                favorite.Rating = Int32.Parse(DropDownList1.SelectedValue);
+                model.Entry(favorite).State = EntityState.Deleted;
+                model.SaveChanges();
+                favorite.Rating = Int32.Parse(selectedValue);
 
                 model.Favorites.Add(favorite);
                 model.SaveChanges();
