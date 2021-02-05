@@ -26,7 +26,14 @@ namespace Licenta
             Label2.Text = recipe.ingredients;
             Label4.Text = recipe.instructions;
 
-            DropDownList1.SelectedValue = favorite.Rating.ToString();
+            if(favorite == null)
+            {
+                DropDownList1.SelectedValue = "1";
+            }
+            else
+            {
+                DropDownList1.SelectedValue = favorite.Rating.ToString();
+            }
         }
 
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
@@ -34,12 +41,27 @@ namespace Licenta
             Recipe recipe = (Recipe)Session["Recipe"];
             Favorite favorite = new Favorite();
 
-            favorite.RecipeId = recipe.ID;
-            favorite.UserId = HttpContext.Current.Request.LogonUserIdentity.Name;
-            favorite.Rating = Int32.Parse(DropDownList1.SelectedValue);
+            favorite = model.Favorites.FirstOrDefault(x => x.UserId == HttpContext.Current.Request.LogonUserIdentity.Name && x.RecipeId == recipe.ID);
 
-            model.Favorites.Add(favorite);
-            model.SaveChanges();
+            if(favorite==null)
+            {
+                favorite = new Favorite();
+                favorite.RecipeId = recipe.ID;
+                favorite.UserId = HttpContext.Current.Request.LogonUserIdentity.Name;
+                favorite.Rating = Int32.Parse(DropDownList1.SelectedValue);
+
+                model.Favorites.Add(favorite);
+                model.SaveChanges();
+            }
+            else
+            {
+                model.Favorites.Remove(favorite);
+                favorite.Rating = Int32.Parse(DropDownList1.SelectedValue);
+
+                model.Favorites.Add(favorite);
+                model.SaveChanges();
+            }
+
         }
     }
 }

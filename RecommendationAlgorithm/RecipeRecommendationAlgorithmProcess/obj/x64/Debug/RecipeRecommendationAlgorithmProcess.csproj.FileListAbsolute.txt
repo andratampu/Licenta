@@ -50,5 +50,3 @@ E:\Facultate\Licenta\Licenta\RecommendationAlgorithm\RecipeRecommendationAlgorit
 E:\Facultate\Licenta\Licenta\RecommendationAlgorithm\RecipeRecommendationAlgorithmProcess\bin\x64\Debug\EntityFramework.SqlServer.dll
 E:\Facultate\Licenta\Licenta\RecommendationAlgorithm\RecipeRecommendationAlgorithmProcess\bin\x64\Debug\EntityFramework.xml
 E:\Facultate\Licenta\Licenta\RecommendationAlgorithm\RecipeRecommendationAlgorithmProcess\bin\x64\Debug\EntityFramework.SqlServer.xml
-E:\Facultate\Licenta\Licenta\RecommendationAlgorithm\RecipeRecommendationAlgorithmProcess\bin\x64\Debug\Data\test.csv
-E:\Facultate\Licenta\Licenta\RecommendationAlgorithm\RecipeRecommendationAlgorithmProcess\bin\x64\Debug\Data\train.csv

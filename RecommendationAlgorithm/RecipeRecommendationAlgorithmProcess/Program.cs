@@ -21,6 +21,28 @@ namespace RecipeRecommendationAlgorithmProcess
 
             using (LicentaEntities context = new LicentaEntities())
             {
+                //for (int i = 50; i < 100; i++)
+                //{
+                //    context.Users.Add(new User { Username = "test" + i.ToString() });
+                //    context.SaveChanges();
+                //}
+
+                //var users = (from u in context.Users select u.Username).ToList();
+
+                //Random random = new Random();
+
+                //for (int i = 0; i < 1000; i++)
+                //{
+                //    Favorite favorite = new Favorite()
+                //    {
+                //        UserId = users[random.Next(users.Count)],
+                //        RecipeId = random.Next(638100, 638150),
+                //        Rating = random.Next(1, 6)
+                //    };
+                //    context.Favorites.Add(favorite);
+                //    context.SaveChanges();
+                //}
+
                 var query = from f in context.Favorites
                             join u in context.Users on f.UserId equals u.Username
                             select new { u.ID, f.RecipeId, f.Rating };
@@ -41,8 +63,12 @@ namespace RecipeRecommendationAlgorithmProcess
 
             MLContext mlContext = new MLContext();
 
-            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<RecipeRating>(Path.Combine(Environment.CurrentDirectory, "Data", "train.csv"), hasHeader: true, separatorChar: ',');
-            IDataView testDataView = mlContext.Data.LoadFromTextFile<RecipeRating>(Path.Combine(Environment.CurrentDirectory, "Data", "test.csv"), hasHeader: true, separatorChar: ',');
+
+            IDataView trainDataView = mlContext.Data.LoadFromTextFile<RecipeRating>(Path.Combine(Environment.CurrentDirectory, "Data", "train.csv"), hasHeader: true, separatorChar: ',');
+
+            DataOperationsCatalog.TrainTestData dataSplit = mlContext.Data.TrainTestSplit(trainDataView, testFraction: 0.2);
+            IDataView trainData = dataSplit.TrainSet;
+            IDataView testData = dataSplit.TestSet;
 
             IEstimator<ITransformer> estimator = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "UserIdEncoded", inputColumnName: "UserId")
             .Append(mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "RecipeIdEncoded", inputColumnName: "RecipeId"));
@@ -52,40 +78,43 @@ namespace RecipeRecommendationAlgorithmProcess
                 MatrixColumnIndexColumnName = "UserIdEncoded",
                 MatrixRowIndexColumnName = "RecipeIdEncoded",
                 LabelColumnName = "Rating",
-                NumberOfIterations = 20,
-                ApproximationRank = 100
+                NumberOfIterations = 50,
+                NumberOfThreads = 10,
+                ApproximationRank = 100,
+                Alpha = 1,
             };
 
             var trainerEstimator = estimator.Append(mlContext.Recommendation().Trainers.MatrixFactorization(options));
 
             Console.WriteLine("------------ Train model ------------");
-            ITransformer model = trainerEstimator.Fit(trainingDataView);
+            ITransformer model = trainerEstimator.Fit(trainData);
 
 
-            //Console.WriteLine("------------ Evaluate model ------------");
-            //var prediction = model.Transform(testDataView);
+            Console.WriteLine("------------ Evaluate model ------------");
+            var prediction = model.Transform(testData);
 
-            //var metrics = mlContext.Regression.Evaluate(prediction, labelColumnName: "Rating", scoreColumnName: "Score");
+            var metrics = mlContext.Regression.Evaluate(prediction, labelColumnName: "Rating", scoreColumnName: "Score");
 
-            //Console.WriteLine("Root Mean Squared Error : " + metrics.RootMeanSquaredError.ToString());
-            //Console.WriteLine("RSquared: " + metrics.RSquared.ToString());
+            Console.WriteLine("Root Mean Squared Error : " + metrics.RootMeanSquaredError.ToString());
+            Console.WriteLine("RSquared: " + metrics.RSquared.ToString() + " MAE: " + metrics.MeanAbsoluteError.ToString());
 
 
             Console.WriteLine("------------ Making prediction ------------");
             var predictionEngine = mlContext.Model.CreatePredictionEngine<RecipeRating, RecipeRatingPrediction>(model);
 
+            
             RecipeRating testInput = new RecipeRating();
 
             using (LicentaEntities entities = new LicentaEntities())
             {
-                var UserIds = from f in entities.Favorites select f.UserId;
-                var RecipeIds = from r in entities.Favorites select r.RecipeId;
+                entities.Database.ExecuteSqlCommand("TRUNCATE TABLE [Recommendations]");
+                var UserIds = (from f in entities.Favorites join u in entities.Users on f.UserId equals u.Username select  new { UserId = u.ID , Username =u.Username}).ToList().Distinct().ToDictionary(x=> x.UserId.ToString(), x=>x.Username);
+                var RecipeIds = (from r in entities.Favorites select r.RecipeId).ToList().Distinct();
 
-                foreach(var user in UserIds)
+                foreach(string user in UserIds.Keys)
                 {
                     testInput.UserId = (float)Convert.ToDouble(user);
                     string recommendedRecipes = "";
-                    Recommendation recommendation = new Recommendation();
 
                     foreach (var recipe in RecipeIds)
                     {
@@ -99,18 +128,20 @@ namespace RecipeRecommendationAlgorithmProcess
                         }
                     }
 
-                    recommendation.UserId = user;
-                    recommendation.Recommendations = recommendedRecipes.Remove(recommendedRecipes.Length - 1);
+                    Recommendation recommendation = new Recommendation();
 
+                    recommendation.UserId = UserIds[user.ToString()];
+                    recommendation.Recommendations = string.IsNullOrEmpty(recommendedRecipes) ? "" : recommendedRecipes.Remove(recommendedRecipes.Length - 1);
                     entities.Recommendations.Add(recommendation);
+
                     entities.SaveChanges();
                 }
 
             }
 
-
-            Console.WriteLine("------------ Save model to file ------------");
-            mlContext.Model.Save(model, trainingDataView.Schema, Path.Combine(Environment.CurrentDirectory, "Data", "model.zip"));
+            Console.WriteLine("Done! ^^");
+            //Console.WriteLine("------------ Save model to file ------------");
+            //mlContext.Model.Save(model, trainData.Schema, Path.Combine(Environment.CurrentDirectory, "Data", "model.zip"));
 
 
             Console.ReadLine();
