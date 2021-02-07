@@ -25,6 +25,7 @@ namespace Licenta
             favorite = model.Favorites.Where(x => x.RecipeId == recipe.ID && x.UserId == HttpContext.Current.Request.LogonUserIdentity.Name).FirstOrDefault();
 
             Image1.ImageUrl = recipe.Image;
+            Label6.Text = recipe.Title;
             Label2.Text = recipe.ingredients;
             Label4.Text = recipe.instructions;
 

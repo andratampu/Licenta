@@ -11,7 +11,11 @@ namespace Licenta
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+        }
 
+        protected void Logout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
         }
     }
 }

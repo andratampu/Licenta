@@ -35,7 +35,7 @@
             flex-direction: row;
         }
         .search{
-            align-items:center;
+            align-items: center;
             height: 100%;
             width: 30%;
         }
@@ -62,6 +62,7 @@
             <br/>
             <asp:Button ID="searchBtn" runat="server" Width ="90%" Text="Search" OnClick="searchBtn_Click" />
             <br/>
+            <br />
             <asp:Button ID="Button2" runat="server" Width ="90%" Text="Recommend me something" OnClick="Button2_Click" />
             <br />
          </div>
@@ -80,6 +81,7 @@
                                  <br />
                               </div>
                         </div>
+                        <br />
                     </ItemTemplate>
                </asp:DataList>
              </div>

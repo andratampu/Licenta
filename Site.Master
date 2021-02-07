@@ -52,7 +52,7 @@
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">What to cook?</a></li>
                         <%--<li><a runat="server" href="~/About">Despre</a></li>--%>
-                        <li><a runat="server" href="~/Login">Log in</a></li>
+                        <li><a runat="server" href="~/Login">Log In</a></li>
                         <li><a runat="server" href="~/Signup">Sign Up</a></li>
                         <li><a runat="server" href="~/Contact">Contact</a></li>
                     </ul>

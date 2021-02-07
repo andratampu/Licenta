@@ -21,13 +21,13 @@ namespace RecipeRecommendationAlgorithmProcess
 
             using (LicentaEntities context = new LicentaEntities())
             {
-                //for (int i = 50; i < 100; i++)
+                //for (int i = 0; i < 50; i++)
                 //{
                 //    context.Users.Add(new User { Username = "test" + i.ToString() });
                 //    context.SaveChanges();
                 //}
 
-                //var users = (from u in context.Users select u.Username).ToList();
+                //var users = (from u in context.Users select u.Username).Distinct().ToList();
 
                 //Random random = new Random();
 
@@ -36,7 +36,7 @@ namespace RecipeRecommendationAlgorithmProcess
                 //    Favorite favorite = new Favorite()
                 //    {
                 //        UserId = users[random.Next(users.Count)],
-                //        RecipeId = random.Next(638100, 638150),
+                //        RecipeId = random.Next(638100, 638250),
                 //        Rating = random.Next(1, 6)
                 //    };
                 //    context.Favorites.Add(favorite);
@@ -47,7 +47,7 @@ namespace RecipeRecommendationAlgorithmProcess
                             join u in context.Users on f.UserId equals u.Username
                             select new { u.ID, f.RecipeId, f.Rating };
 
-                query.ToList().ForEach((x) =>
+                query.Distinct().ToList().ForEach((x) =>
                 {
                     DataRow row = table.NewRow();
 
@@ -80,8 +80,7 @@ namespace RecipeRecommendationAlgorithmProcess
                 LabelColumnName = "Rating",
                 NumberOfIterations = 50,
                 NumberOfThreads = 10,
-                ApproximationRank = 100,
-                Alpha = 1,
+                ApproximationRank = 500,
             };
 
             var trainerEstimator = estimator.Append(mlContext.Recommendation().Trainers.MatrixFactorization(options));
@@ -95,8 +94,8 @@ namespace RecipeRecommendationAlgorithmProcess
 
             var metrics = mlContext.Regression.Evaluate(prediction, labelColumnName: "Rating", scoreColumnName: "Score");
 
-            Console.WriteLine("Root Mean Squared Error : " + metrics.RootMeanSquaredError.ToString());
-            Console.WriteLine("RSquared: " + metrics.RSquared.ToString() + " MAE: " + metrics.MeanAbsoluteError.ToString());
+            Console.WriteLine("Media Distantelor : " + metrics.RootMeanSquaredError.ToString());
+            Console.WriteLine("Coeficient determinare: " + metrics.RSquared.ToString());
 
 
             Console.WriteLine("------------ Making prediction ------------");

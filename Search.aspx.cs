@@ -44,7 +44,7 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                string req = $"recipes/complexSearch?apiKey=4bf4ec1927934264b57d31947fcbb48e&query={search}&number=1";
+                string req = $"recipes/complexSearch?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff&query={search}&number=20";
 
                 if(!string.IsNullOrEmpty(ingredients) && !string.IsNullOrWhiteSpace(ingredients))
                 {
@@ -84,8 +84,8 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage responseInstructions = client.GetAsync($"recipes/{id}/analyzedInstructions?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
-                HttpResponseMessage responseIngredients = client.GetAsync($"recipes/{id}//ingredientWidget.json?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+                HttpResponseMessage responseInstructions = client.GetAsync($"recipes/{id}/analyzedInstructions?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
+                HttpResponseMessage responseIngredients = client.GetAsync($"recipes/{id}//ingredientWidget.json?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
                 
                 if (responseInstructions.IsSuccessStatusCode)
                 {
@@ -133,8 +133,8 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage responseInstructions = client.GetAsync($"recipes/{id}/analyzedInstructions?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
-                HttpResponseMessage responseIngredients = client.GetAsync($"recipes/{id}//ingredientWidget.json?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+                HttpResponseMessage responseInstructions = client.GetAsync($"recipes/{id}/analyzedInstructions?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
+                HttpResponseMessage responseIngredients = client.GetAsync($"recipes/{id}//ingredientWidget.json?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
 
                 if (responseInstructions.IsSuccessStatusCode)
                 {
@@ -183,7 +183,7 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 
-                HttpResponseMessage responseIngredients = client.GetAsync($"recipes/{id}//ingredientWidget.json?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+                HttpResponseMessage responseIngredients = client.GetAsync($"recipes/{id}//ingredientWidget.json?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
 
                 if (responseIngredients.IsSuccessStatusCode)
                 {
@@ -218,7 +218,7 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage responseInstructions = client.GetAsync($"recipes/{id}/analyzedInstructions?apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+                HttpResponseMessage responseInstructions = client.GetAsync($"recipes/{id}/analyzedInstructions?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
 
                 if (responseInstructions.IsSuccessStatusCode)
                 {
@@ -252,7 +252,7 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage responseRecipe = client.GetAsync($"recipes/{id}/information?includeNutrition=false&apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+                HttpResponseMessage responseRecipe = client.GetAsync($"recipes/{id}/information?includeNutrition=false&apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
                 if (responseRecipe.IsSuccessStatusCode)
                 {
                     var response = responseRecipe.Content.ReadAsStringAsync().Result;
