@@ -19,15 +19,15 @@ namespace RecipeRecommendationAlgorithmProcess
             table.Columns.Add("RecipeId", typeof(float));
             table.Columns.Add("Rating", typeof(float));
 
-            using (LicentaEntities context = new LicentaEntities())
+            using (LicentaEntities entities = new LicentaEntities())
             {
                 //for (int i = 0; i < 50; i++)
                 //{
-                //    context.Users.Add(new User { Username = "test" + i.ToString() });
-                //    context.SaveChanges();
+                //    entities.Users.Add(new User { Username = "test" + i.ToString() });
+                //    entities.SaveChanges();
                 //}
 
-                //var users = (from u in context.Users select u.Username).Distinct().ToList();
+                //var users = (from u in entities.Users select u.Username).Distinct().ToList();
 
                 //Random random = new Random();
 
@@ -39,12 +39,12 @@ namespace RecipeRecommendationAlgorithmProcess
                 //        RecipeId = random.Next(638100, 638250),
                 //        Rating = random.Next(1, 6)
                 //    };
-                //    context.Favorites.Add(favorite);
-                //    context.SaveChanges();
+                //    entities.Favorites.Add(favorite);
+                //    entities.SaveChanges();
                 //}
 
-                var query = from f in context.Favorites
-                            join u in context.Users on f.UserId equals u.Username
+                var query = from f in entities.Favorites
+                            join u in entities.Users on f.UserId equals u.Username
                             select new { u.ID, f.RecipeId, f.Rating };
 
                 query.Distinct().ToList().ForEach((x) =>
@@ -57,60 +57,57 @@ namespace RecipeRecommendationAlgorithmProcess
 
                     table.Rows.Add(row);
                 });
-            }
-
-            ExportData.ToCSV(table, Path.Combine(Environment.CurrentDirectory, "Data", "train.csv"));
-
-            MLContext mlContext = new MLContext();
 
 
-            IDataView trainDataView = mlContext.Data.LoadFromTextFile<RecipeRating>(Path.Combine(Environment.CurrentDirectory, "Data", "train.csv"), hasHeader: true, separatorChar: ',');
+                ExportData.ToCSV(table, Path.Combine(Environment.CurrentDirectory, "Data", "train.csv"));
 
-            DataOperationsCatalog.TrainTestData dataSplit = mlContext.Data.TrainTestSplit(trainDataView, testFraction: 0.2);
-            IDataView trainData = dataSplit.TrainSet;
-            IDataView testData = dataSplit.TestSet;
-
-            IEstimator<ITransformer> estimator = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "UserIdEncoded", inputColumnName: "UserId")
-            .Append(mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "RecipeIdEncoded", inputColumnName: "RecipeId"));
-
-            var options = new MatrixFactorizationTrainer.Options
-            {
-                MatrixColumnIndexColumnName = "UserIdEncoded",
-                MatrixRowIndexColumnName = "RecipeIdEncoded",
-                LabelColumnName = "Rating",
-                NumberOfIterations = 50,
-                NumberOfThreads = 10,
-                ApproximationRank = 500,
-            };
-
-            var trainerEstimator = estimator.Append(mlContext.Recommendation().Trainers.MatrixFactorization(options));
-
-            Console.WriteLine("------------ Train model ------------");
-            ITransformer model = trainerEstimator.Fit(trainData);
+                MLContext context = new MLContext();
 
 
-            Console.WriteLine("------------ Evaluate model ------------");
-            var prediction = model.Transform(testData);
+                IDataView trainDataView = context.Data.LoadFromTextFile<RecipeRating>(Path.Combine(Environment.CurrentDirectory, "Data", "train.csv"), hasHeader: true, separatorChar: ',');
 
-            var metrics = mlContext.Regression.Evaluate(prediction, labelColumnName: "Rating", scoreColumnName: "Score");
+                DataOperationsCatalog.TrainTestData dataSplit = context.Data.TrainTestSplit(trainDataView, testFraction: 0.2);
+                IDataView trainData = dataSplit.TrainSet;
+                IDataView testData = dataSplit.TestSet;
 
-            Console.WriteLine("Media Distantelor : " + metrics.RootMeanSquaredError.ToString());
-            Console.WriteLine("Coeficient determinare: " + metrics.RSquared.ToString());
+                IEstimator<ITransformer> estimator = context.Transforms.Conversion.MapValueToKey(outputColumnName: "UserIdEncoded", inputColumnName: "UserId").Append(context.Transforms.Conversion.MapValueToKey(outputColumnName: "RecipeIdEncoded", inputColumnName: "RecipeId"));
+
+                var options = new MatrixFactorizationTrainer.Options
+                {
+                    MatrixColumnIndexColumnName = "UserIdEncoded",
+                    MatrixRowIndexColumnName = "RecipeIdEncoded",
+                    LabelColumnName = "Rating",
+                    NumberOfIterations = 50,
+                    NumberOfThreads = 10,
+                    ApproximationRank = 500,
+                };
+
+                var trainerEstimator = estimator.Append(context.Recommendation().Trainers.MatrixFactorization(options));
+
+                Console.WriteLine("------------ Train model ------------");
+                ITransformer model = trainerEstimator.Fit(trainData);
 
 
-            Console.WriteLine("------------ Making prediction ------------");
-            var predictionEngine = mlContext.Model.CreatePredictionEngine<RecipeRating, RecipeRatingPrediction>(model);
+                Console.WriteLine("------------ Evaluate model ------------");
+                var prediction = model.Transform(testData);
 
-            
-            RecipeRating testInput = new RecipeRating();
+                var metrics = context.Regression.Evaluate(prediction, labelColumnName: "Rating", scoreColumnName: "Score");
 
-            using (LicentaEntities entities = new LicentaEntities())
-            {
+                Console.WriteLine("Media Distantelor : " + metrics.RootMeanSquaredError.ToString());
+                Console.WriteLine("Coeficient determinare: " + metrics.RSquared.ToString());
+
+
+                Console.WriteLine("------------ Making prediction ------------");
+                var predictionEngine = context.Model.CreatePredictionEngine<RecipeRating, RecipeRatingPrediction>(model);
+
+
+                RecipeRating testInput = new RecipeRating();
+
                 entities.Database.ExecuteSqlCommand("TRUNCATE TABLE [Recommendations]");
-                var UserIds = (from f in entities.Favorites join u in entities.Users on f.UserId equals u.Username select  new { UserId = u.ID , Username =u.Username}).ToList().Distinct().ToDictionary(x=> x.UserId.ToString(), x=>x.Username);
+                var UserIds = (from f in entities.Favorites join u in entities.Users on f.UserId equals u.Username select new { UserId = u.ID, Username = u.Username }).ToList().Distinct().ToDictionary(x => x.UserId.ToString(), x => x.Username);
                 var RecipeIds = (from r in entities.Favorites select r.RecipeId).ToList().Distinct();
 
-                foreach(string user in UserIds.Keys)
+                foreach (string user in UserIds.Keys)
                 {
                     testInput.UserId = (float)Convert.ToDouble(user);
                     string recommendedRecipes = "";
@@ -118,7 +115,7 @@ namespace RecipeRecommendationAlgorithmProcess
                     foreach (var recipe in RecipeIds)
                     {
                         testInput.RecipeId = recipe;
-                        
+
                         var movieRatingPrediction = predictionEngine.Predict(testInput);
 
                         if (Math.Round(movieRatingPrediction.Score, 1) > 4.7)
@@ -135,16 +132,10 @@ namespace RecipeRecommendationAlgorithmProcess
 
                     entities.SaveChanges();
                 }
-
             }
 
             Console.WriteLine("Done! ^^");
-            //Console.WriteLine("------------ Save model to file ------------");
-            //mlContext.Model.Save(model, trainData.Schema, Path.Combine(Environment.CurrentDirectory, "Data", "model.zip"));
-
-
-            Console.ReadLine();
-         
+            //Console.ReadLine();
         }
 
     }
