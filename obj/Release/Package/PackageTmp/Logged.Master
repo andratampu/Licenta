@@ -51,10 +51,11 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <%--<li><a runat="server" href="~/About">Despre</a></li>--%>
-                        <li><a runat="server" href="~/Home">Acasă</a></li>
-                        <li><a runat="server" href="~/Search">Căutare</a></li>
+                        <li><a runat="server" href="~/Home">Home</a></li>
+                        <li><a runat="server" href="~/Search">Search</a></li>
                         <li><a runat="server" href="~/ContactLogged">Contact</a></li>
-                        <li><a runat="server" href="~/AboutLogged">Despre</a></li>
+                        <li><a runat="server" href="~/AboutLogged">About</a></li>
+                        <li><a runat="server" href="~/Login" onclick="Logout_Click">Log Out</a></li>
                     </ul>
                 </div>
             </div>
@@ -62,10 +63,10 @@
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
-            <hr />
+            <%--<hr />
             <footer>
                 <p>&copy; <%: DateTime.Now.Year %> - Ce gătim azi?</p>
-            </footer>
+            </footer>--%>
         </div>
 
     </form>

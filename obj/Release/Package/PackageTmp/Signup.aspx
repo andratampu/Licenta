@@ -6,7 +6,7 @@
        <%-- <h1>ASP.NET</h1>
         <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
         <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>--%>
-        <h3>Înregistrează-te</h3>
+        <h3>Sign Up!</h3>
         <asp:createuserwizard id="Createuserwizard1" runat="server" Height="304px" Width="406px" ContinueDestinationPageUrl="~/Home.aspx">
         <wizardsteps>
           <asp:createuserwizardstep runat="server" title="Sign Up for Your New Account">
@@ -85,7 +85,7 @@
                   <table border="0" cellspacing="5" style="width:100%;height:100%;">
                       <tr align="right">
                           <td align="right" colspan="0">
-                              <asp:Button ID="StepNextButton" runat="server" CommandName="MoveNext" Text="Create User" ValidationGroup="Createuserwizard1" OnClick="StepNextButton_Click"/>
+                              <asp:Button ID="StepNextButton" runat="server" CommandName="MoveNext" Text="Create User" ValidationGroup="Createuserwizard1"/>
                           </td>
                       </tr>
                   </table>
@@ -111,7 +111,7 @@
         </wizardsteps>
             <FinishNavigationTemplate>
                 <asp:Button ID="FinishPreviousButton" runat="server" CausesValidation="False" CommandName="MovePrevious" Text="Previous" />
-                <asp:Button ID="FinishButton" runat="server" CommandName="MoveComplete" Text="Finish" />
+                <asp:Button ID="FinishButton" runat="server" CommandName="MoveComplete" Text="Finish"/>
             </FinishNavigationTemplate>
       </asp:createuserwizard>
     </div>

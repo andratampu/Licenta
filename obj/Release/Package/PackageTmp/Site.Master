@@ -50,10 +50,10 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/">Ce gătim azi?</a></li>
+                        <li><a runat="server" href="~/">What to cook?</a></li>
                         <%--<li><a runat="server" href="~/About">Despre</a></li>--%>
-                        <li><a runat="server" href="~/Login">Autentificare</a></li>
-                        <li><a runat="server" href="~/Signup">Înregistrare</a></li>
+                        <li><a runat="server" href="~/Login">Log In</a></li>
+                        <li><a runat="server" href="~/Signup">Sign Up</a></li>
                         <li><a runat="server" href="~/Contact">Contact</a></li>
                     </ul>
                 </div>
@@ -64,7 +64,7 @@
             </asp:ContentPlaceHolder>
             <hr />
             <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - Ce gătim azi?</p>
+                <p>&copy; <%: DateTime.Now.Year %> - What to cook?</p>
             </footer>
         </div>
 

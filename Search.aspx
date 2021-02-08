@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Logged.Master" AutoEventWireup="true" CodeFile="Search.aspx.cs" Inherits="Licenta.Search" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Logged.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="Licenta.Search" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="cc1" %>
 
@@ -34,12 +34,16 @@
             justify-content: center;
             flex-direction: row;
         }
-        .search{
-            align-items: center;
-            height: 100%;
+        .search
+        {
+            position: fixed;
+            top: 60px;
+            left: 5%;
             width: 30%;
+            height:30%;
         }
         .results{
+            padding-left:5%;
             height: 100%;
             width: 70%;
         }
