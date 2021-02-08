@@ -268,6 +268,40 @@ namespace Licenta
             }
         }
 
+        public List<Recipe> GetRandomRecipes()
+        {
+            Root receipes = new Root();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(baseUrl);
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                HttpResponseMessage response = client.GetAsync($"recipes/random?number=10&apiKey=4bf4ec1927934264b57d31947fcbb48e").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var receipeResponse = response.Content.ReadAsStringAsync().Result;
+                    receipes = JsonConvert.DeserializeObject<Root>(receipeResponse);
+
+                }
+                client.Dispose();
+                List<Recipe> result = new List<Recipe>(receipes.Results);
+
+                foreach (Recipe recipe in result)
+                {
+                    recipe.ingredients = GetReceipeIngredients(recipe.ID);
+                    recipe.instructions = GetReceipeInstructions(recipe.ID);
+                    if (string.IsNullOrEmpty(recipe.Image))
+                        recipe.Image = "E:\\Facultate\\Licenta\\Licenta\\default.jpg";
+                }
+
+                return result;
+            }
+        }
 
         public static Recipe GetRecipeObject(string id)
         {
@@ -310,7 +344,9 @@ namespace Licenta
 
             if(recommendation == null)
             {
-                DataList1.DataSource = new List<Recipe>();
+                List<Recipe> recipes = new List<Recipe>(GetRandomRecipes());
+                global_recipes = recipes;
+                DataList1.DataSource = recipes;
                 DataList1.DataBind();
             }
             else
