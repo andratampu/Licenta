@@ -7,6 +7,7 @@ using System.IO;
 using Microsoft.ML;
 using Microsoft.ML.Trainers;
 using System.Data;
+using XPlot.Plotly;
 
 namespace RecipeRecommendationAlgorithmProcess
 {
@@ -70,7 +71,8 @@ namespace RecipeRecommendationAlgorithmProcess
                 IDataView trainData = dataSplit.TrainSet;
                 IDataView testData = dataSplit.TestSet;
 
-                IEstimator<ITransformer> estimator = context.Transforms.Conversion.MapValueToKey(outputColumnName: "UserIdEncoded", inputColumnName: "UserId").Append(context.Transforms.Conversion.MapValueToKey(outputColumnName: "RecipeIdEncoded", inputColumnName: "RecipeId"));
+                IEstimator<ITransformer> estimator = context.Transforms.Conversion.MapValueToKey(outputColumnName: "UserIdEncoded", inputColumnName: "UserId")
+                    .Append(context.Transforms.Conversion.MapValueToKey(outputColumnName: "RecipeIdEncoded", inputColumnName: "RecipeId"));
 
                 var options = new MatrixFactorizationTrainer.Options
                 {
@@ -84,27 +86,29 @@ namespace RecipeRecommendationAlgorithmProcess
 
                 var trainerEstimator = estimator.Append(context.Recommendation().Trainers.MatrixFactorization(options));
 
-                Console.WriteLine("------------ Train model ------------");
+                Console.WriteLine("------------ Antrenare ------------");
                 ITransformer model = trainerEstimator.Fit(trainData);
 
 
-                Console.WriteLine("------------ Evaluate model ------------");
+                Console.WriteLine("------------ Testare ------------");
                 var prediction = model.Transform(testData);
 
                 var metrics = context.Regression.Evaluate(prediction, labelColumnName: "Rating", scoreColumnName: "Score");
 
-                Console.WriteLine("Media Distantelor : " + metrics.RootMeanSquaredError.ToString());
+                Console.WriteLine("Media distantelor : " + metrics.RootMeanSquaredError.ToString());
                 Console.WriteLine("Coeficient determinare: " + metrics.RSquared.ToString());
 
 
-                Console.WriteLine("------------ Making prediction ------------");
+                Console.WriteLine("------------ Generare recomandari ------------");
                 var predictionEngine = context.Model.CreatePredictionEngine<RecipeRating, RecipeRatingPrediction>(model);
 
 
                 RecipeRating testInput = new RecipeRating();
 
                 entities.Database.ExecuteSqlCommand("TRUNCATE TABLE [Recommendations]");
-                var UserIds = (from f in entities.Favorites join u in entities.Users on f.UserId equals u.Username select new { UserId = u.ID, Username = u.Username }).ToList().Distinct().ToDictionary(x => x.UserId.ToString(), x => x.Username);
+                var UserIds = (from f in entities.Favorites join u in entities.Users on f.UserId equals u.Username 
+                               select new { UserId = u.ID, Username = u.Username }).ToList().Distinct().
+                               ToDictionary(x => x.UserId.ToString(), x => x.Username);
                 var RecipeIds = (from r in entities.Favorites select r.RecipeId).ToList().Distinct();
 
                 foreach (string user in UserIds.Keys)
@@ -118,7 +122,7 @@ namespace RecipeRecommendationAlgorithmProcess
 
                         var movieRatingPrediction = predictionEngine.Predict(testInput);
 
-                        if (Math.Round(movieRatingPrediction.Score, 1) > 4.7)
+                        if (Math.Round(movieRatingPrediction.Score, 1) > 3.5)
                         {
                             recommendedRecipes += testInput.RecipeId + ",";
                         }
@@ -127,15 +131,17 @@ namespace RecipeRecommendationAlgorithmProcess
                     Recommendation recommendation = new Recommendation();
 
                     recommendation.UserId = UserIds[user.ToString()];
-                    recommendation.Recommendations = string.IsNullOrEmpty(recommendedRecipes) ? "" : recommendedRecipes.Remove(recommendedRecipes.Length - 1);
+                    recommendation.Recommendations = string.IsNullOrEmpty(recommendedRecipes) ? "" :
+                        recommendedRecipes.Remove(recommendedRecipes.Length - 1);
                     entities.Recommendations.Add(recommendation);
 
                     entities.SaveChanges();
                 }
+
             }
 
             Console.WriteLine("Done! ^^");
-            //Console.ReadLine();
+            Console.ReadLine();
         }
 
     }
