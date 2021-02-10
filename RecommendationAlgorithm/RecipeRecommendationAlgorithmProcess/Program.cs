@@ -22,27 +22,27 @@ namespace RecipeRecommendationAlgorithmProcess
 
             using (LicentaEntities entities = new LicentaEntities())
             {
-                //for (int i = 0; i < 50; i++)
-                //{
-                //    entities.Users.Add(new User { Username = "test" + i.ToString() });
-                //    entities.SaveChanges();
-                //}
+                for (int i = 0; i < 50; i++)
+                {
+                    entities.Users.Add(new User { Username = "test" + i.ToString() });
+                    entities.SaveChanges();
+                }
 
-                //var users = (from u in entities.Users select u.Username).Distinct().ToList();
+                var users = (from u in entities.Users select u.Username).Distinct().ToList();
 
-                //Random random = new Random();
+                Random random = new Random();
 
-                //for (int i = 0; i < 1000; i++)
-                //{
-                //    Favorite favorite = new Favorite()
-                //    {
-                //        UserId = users[random.Next(users.Count)],
-                //        RecipeId = random.Next(638100, 638250),
-                //        Rating = random.Next(1, 6)
-                //    };
-                //    entities.Favorites.Add(favorite);
-                //    entities.SaveChanges();
-                //}
+                for (int i = 0; i < 1000; i++)
+                {
+                    Favorite favorite = new Favorite()
+                    {
+                        UserId = users[random.Next(users.Count)],
+                        RecipeId = random.Next(638100, 638250),
+                        Rating = random.Next(1, 6)
+                    };
+                    entities.Favorites.Add(favorite);
+                    entities.SaveChanges();
+                }
 
                 var query = from f in entities.Favorites
                             join u in entities.Users on f.UserId equals u.Username
