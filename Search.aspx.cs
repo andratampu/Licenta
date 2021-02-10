@@ -66,8 +66,6 @@ namespace Licenta
                 {
                     recipe.ingredients = GetReceipeIngredients(recipe.ID);
                     recipe.instructions = GetReceipeInstructions(recipe.ID);
-                    if (string.IsNullOrEmpty(recipe.Image))
-                        recipe.Image = "E:\\Facultate\\Licenta\\Licenta\\default.jpg";
                 }
 
                 return result;
@@ -295,8 +293,6 @@ namespace Licenta
                 {
                     recipe.ingredients = GetReceipeIngredients(recipe.ID);
                     recipe.instructions = GetReceipeInstructions(recipe.ID);
-                    if (string.IsNullOrEmpty(recipe.Image))
-                        recipe.Image = "E:\\Facultate\\Licenta\\Licenta\\default.jpg";
                 }
 
                 return result;
@@ -356,10 +352,14 @@ namespace Licenta
                 foreach(string id in recommendation.Recommendations.Split(','))
                 {
                     Recipe recipe = GetReceipeInfo(Int32.Parse(id));
-                    recipe.ingredients = GetReceipeIngredients(recipe.ID);
-                    recipe.instructions = GetReceipeInstructions(recipe.ID);
+                    if(!string.IsNullOrEmpty(recipe.Title) || !string.IsNullOrWhiteSpace(recipe.Title))
+                    {
+                        recipe.ingredients = GetReceipeIngredients(recipe.ID);
+                        recipe.instructions = GetReceipeInstructions(recipe.ID);
 
-                    recipes.Add(recipe);
+                        recipes.Add(recipe);
+
+                    }
                 }
 
                 global_recipes = recipes;
