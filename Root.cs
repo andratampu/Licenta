@@ -14,7 +14,7 @@ namespace Licenta
         [JsonProperty(PropertyName = "number")]
         public int Number { get; set; }
 
-        [JsonProperty(PropertyName = "recipes")]
+        [JsonProperty(PropertyName = "results")]
         public List<Recipe> Results { get; set; }
 
         [JsonProperty(PropertyName = "totalResults")]
