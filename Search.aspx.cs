@@ -44,7 +44,7 @@ namespace Licenta
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                string req = $"recipes/complexSearch?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff&query={search}&number=10";
+                string req = $"recipes/complexSearch?apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff&query={search}&number=15";
 
                 if(!string.IsNullOrEmpty(ingredients) && !string.IsNullOrWhiteSpace(ingredients))
                 {
@@ -278,7 +278,7 @@ namespace Licenta
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 
-                HttpResponseMessage response = client.GetAsync($"recipes/random?number=10&apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
+                HttpResponseMessage response = client.GetAsync($"recipes/random?number=15&apiKey=f0bc1cb5a0da48e1b8282cba70ca05ff").Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -351,7 +351,7 @@ namespace Licenta
                 int count = 0;
                 foreach(string id in recommendation.Recommendations.Split(','))
                 {
-                    if (count >= 10)
+                    if (count >= 15)
                         break;
 
                     Recipe recipe = GetReceipeInfo(Int32.Parse(id));
